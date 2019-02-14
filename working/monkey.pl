@@ -1,25 +1,16 @@
-grid([[0,4],[1,4],[2,4],[3,4],[4,4],
-        [0,3],[1,3],[2,3],[3,3],[4,3],
-        [0,2],[1,2],[2,2],[3,2],[4,2],
-        [0,1],[1,1],[2,1],[3,1],[4,1],
-        [0,0],[1,0],[2,0],[3,0],[4,0]]).
-
-connected([X1,X1], [X2,X2]) :- (X1 is X2 - 1);
-                               (Y1 is Y2 - 1).
-
 %Program for monkey to use box to grab banana
 %Assumes banana is hanging and that box is at least 1 square from edges 
 %to allow for monkey to manuver and push the box
 
+%Assign things which can be changes as "dynamic"
 :- dynamic (
-	     at/2,
-	     box_loc/1,
-	     banana_loc/1,
-	     path/1,
-         goal1/2,
-         goal2/2
+	     at/2,   	%Where each item is at can change after running
+         goal/2,	%
+         rampGoal/2	%
 	    ).
 
+%Written for testing within SWIPL
+%retracts where everything is and then resets them at specified positions
 start :-      retractall(at(Agent,[X,Y])),
               assert(at(box,[1,2])),
               assert(at(monkey,[0,2])),
@@ -34,24 +25,20 @@ climbup(Dir) :- (at(box,[Xbo,Ybo]), at(monkey,[Xmo,Ymo]), at(banana,[Xba,Yba]),
               (DirB is 5, Xmo is Xbo, Ymo is Ybo - 1, Dir is 1);
               (DirB is 7, Xmo is Xbo - 1, Ymo is Ybo, Dir is 3)).
 
+%Used to determine if the box and banana are in same place
 climbable :- at(box,[Xbo,Ybo]), at(banana,[Xba,Yba]), Xbo is Xba, Ybo is Yba.
-
-climbup(Dir) :- (at(box,[Xbo,Ybo]), at(monkey,[Xmo,Ymo]), at(banana,[Xba,Yba]), 
-             Xbo is Xba, Ybo is Yba, box_direction(DirB)),
-             ((DirB is 1, Xmo is Xbo, Ymo is Ybo + 1, Dir is 5);
-              (DirB is 3, Xmo is Xbo + 1, Ymo is Ybo, Dir is 7);
-              (DirB is 5, Xmo is Xbo, Ymo is Ybo - 1, Dir is 1);
-              (DirB is 7, Xmo is Xbo - 1, Ymo is Ybo, Dir is 3)).
 
 
 %goal will be location which places box between monkey and banana
-%this allows monkey to push towards banana
+%this allows monkey to push box towards banana
 goal(X1, Y1) :- (at(box,[Xbo,Ybo]), at(banana,[Xb,Yb])), 
                  ((X1 is Xbo-1, Y1 is Ybo, Xb > Xbo);
                   (X1 is Xbo+1, Y1 is Ybo, Xb < Xbo);
                   (Y1 is Ybo-1, X1 is Xbo, Yb > Ybo);
                   (Y1 is Ybo+1, X1 is Xbo, Yb < Ybo)).
 
+%Special type of goal for when box is under banana. 
+%allows the robot to approach from ramp side
 rampGoal(X1, Y1) :- (at(box,[Xbo,Ybo]), at(banana,[Xb,Yb]), 
                     Xbo is Xb, Ybo is Yb, box_direction(DirB)), 
                  ((X1 is Xbo-1, Y1 is Ybo, DirB is 7);
@@ -59,7 +46,8 @@ rampGoal(X1, Y1) :- (at(box,[Xbo,Ybo]), at(banana,[Xb,Yb]),
                   (Y1 is Ybo-1, X1 is Xbo, DirB is 5);
                   (Y1 is Ybo+1, X1 is Xbo, DirB is 1)).
 
-
+%Changes monkey and box position to simulate "pushing" until box is lined up with either banana X or banana Y
+%pushes either north south east or west, direction corresponds to numerical value of Dir
 pushto(monkey, box,[Xm1, Ym1],[Xbo1, Ybo1], Dir) :-
        (at(monkey,[Xm0, Ym0]),at(box,[Xbo0, Ybo0]), at(banana,[Xba, Yba])),
        ((Xm0 is Xbo0, Ym0 is Ybo0-1, Ybo0 < Yba, 
@@ -75,7 +63,10 @@ pushto(monkey, box,[Xm1, Ym1],[Xbo1, Ybo1], Dir) :-
             Xbo1 is Xbo0-1, Ybo1 is Ybo0, 
             Xm1 is Xm0-1, Ym1 is Ym0, Dir is 7)).             %west
  
-
+%Moves monkey without pushing box.
+%monkey will attempt to approach the goal defined in goal(X,Y)
+%Monkey can move in 8 directions N S E W and NE SE NW SW
+%Diagonals will only be used if nothing is in the corners
 moveto(monkey,[X1, Y1], Dir) :-
         at(monkey,[X0, Y0]), at(box,[Xb, Yb]), goal(Xg, Yg),
         ((Yg is Y0, Xg is X0, X1 is Xg, Y1 is Yg, Dir is 0);
@@ -116,6 +107,7 @@ moveto(monkey,[X1, Y1], Dir) :-
 
         not(at(box,[X1, Y1]))).
 
+%Special move for monkey where it approaches rampGoal instead of goal
 movetoclimb(monkey,[X1, Y1], Dir) :-
         at(monkey,[X0, Y0]), at(box,[Xb, Yb]), rampGoal(Xg, Yg),
         ((Yg is Y0, Xg is X0, X1 is Xg, Y1 is Yg, Dir is 0);
