@@ -1,8 +1,6 @@
-# File: Cannibals and Missionaries
+# File: ServoMoment.py
 #
-# Authors: Kiyasul Arif Abdul Majeeth <kiyasul@pdx.edu>, Rahul Marathe <rmarathe@pdx.edu>, Shadman Samin <shadman@pdx.edu>
-#
-# Date: 6/16/2018
+# Date: 2/23/2019
 # Portland State University
 #############################################################
 from global_File import *
