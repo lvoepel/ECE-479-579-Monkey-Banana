@@ -33,7 +33,7 @@ class ServoMovement:
         time.sleep(4)
         self.input_object.goto(10, 0, speed=SERVO_SPEED, degrees=True)
         time.sleep(4)
-
+ 
     def open_hand(self):
         print("Claw Opened")
         serial_connection.goto(10, 30, speed=SERVO_SPEED, degrees=True)
