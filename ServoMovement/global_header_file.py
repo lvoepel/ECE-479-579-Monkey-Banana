@@ -9,29 +9,7 @@ import pywin32_system32
 import pyttsx3
 
 
-# GLOBAL VARIABLE FOR MASKS
-GREEN_LOWER_1 = np.array([40, 70, 70], np.uint8)  # green
-GREEN_UPPER_1 = np.array([80, 200, 200], np.uint8)  # green
 
-GREEN_LOWER = np.array([40, 30, 30], np.uint8)  # green
-GREEN_UPPER = np.array([70, 255, 255], np.uint8)  # green
-
-RED_LOWER = np.array([0, 70, 50], np.uint8)
-RED_UPPER = np.array([10, 255, 255], np.uint8)
-
-RED_LOWER_1 = np.array([170, 70, 50], np.uint8)
-RED_UPPER_1 = np.array([180, 255, 255], np.uint8)
-
-# BLUE_LOWER = np.array([100, 150, 0], np.uint8) #100
-# BLUE_UPPER = np.array([150, 255, 255], np.uint8) #150
-
-MINIMUM_CONTOUR_AREA = 1200
-MAXIMUMM_CONTOUR_AREA = 5000
-CONTOUR_LIMIT = 20
-TOLERANCE = 15
-
-MISSIONARY = "green"
-CANNIBAL = "red"
 
 # HARD CODED POSITIONS
 POSITION = {
@@ -102,4 +80,3 @@ SERVO_SETTING = {"R1": {1: -95.7,
                         3: 48.2,
                         4: 68.5}
                  }
-
