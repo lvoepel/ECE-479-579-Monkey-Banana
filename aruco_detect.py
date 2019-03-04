@@ -7,10 +7,12 @@ import cv2.aruco as aruco
 # Defines
 gridDimensions = 5
 
-# Setup webcam
-cap = cv2.VideoCapture(0)
 
-while(True):
+def frame_loop(cap):
+    monkey_location = [-1,-1]
+    banana_location = [-1,-1]
+    ramp_location   = [-1,-1]
+
     # Capture frame-by-frame
     ret, frame = cap.read()
     #print(frame.shape) # Uncomment to determine dimensions
@@ -48,18 +50,40 @@ while(True):
         y = (j[1] + j[3] + j[5] + j[7])/4
         if ids[count] == 1:
             print("monkey")
+            monkey_location[0]=x
+            monkey_location[1]=y
         elif ids[count] == 2:
             print("banana")
+            banana_location[0]=x
+            banana_location[1]=y
         elif ids[count] == 3:
             print("ramp")
+            ramp_location[0]=x
+            ramp_location[1]=y
         print(x, y)
 
     # Display the resulting frame
     cv2.imshow('frame',gray)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
 
-# When everything done, release the capture
-cap.release()
-cv2.destroyAllWindows()
+    return monkey_location,banana_location,ramp_location
 
+
+def main():
+# Setup webcam
+    cap = cv2.VideoCapture(0)
+    while(True):
+        hel,llo,worl = frame_loop(cap)
+        print(hel)
+        print(llo)
+        print(worl)
+        
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    # When everything done, release the capture
+    cap.release()
+    cv2.destroyAllWindows()
+
+
+if __name__ == "__main__":
+    main()
