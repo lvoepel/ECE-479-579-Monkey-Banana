@@ -1,0 +1,6 @@
+*.pyc
+*.jpg
+!monkey.jpg
+!banana.jpg
+!ramp.jpg
+
