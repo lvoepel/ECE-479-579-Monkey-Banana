@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # File: Servo Movement.py
 # Date: 2/23/2019
 # Portland State University
@@ -7,6 +8,8 @@
 # from dynamixel_msgs.msg import JointState
 # from std_msgs.msg import Float64
 # from std_msgs.msg import String
+
+
 import os
 import time
 
