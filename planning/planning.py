@@ -145,8 +145,10 @@ if __name__ == '__main__' :
 
     x_vals = [mX, boX, baX]
     y_vals = [mY, boY, baY]
-    gX = max(x_vals) + 3
-    gY = max(y_vals) + 3
+    #gX = max(x_vals) + 3
+    #gY = max(y_vals) + 3
+    gX = 5
+    gY = 5
     print(gX)
     print(gY)
     #baX = 2
