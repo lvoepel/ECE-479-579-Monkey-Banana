@@ -358,11 +358,6 @@ if __name__ == '__main__' :
         print
         x = 0
         y = y + 1
-    #print(Back.White + 'and with a green background')
-    print(Style.DIM + 'and in dim text')
-    print(Style.RESET_ALL)
-    print('back to normal now')
-    #drawGrid()
-    #drawPlan()
+    
 
     
