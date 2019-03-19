@@ -85,6 +85,7 @@ def upRamp(steps, prologg):
         #i = i + 1
         print("starting at:" + str(prevM['Xm']) + "," + str(prevM['Ym']))
         if move['Dir'] == 0:
+            climbUp(steps, prolog)
             print("Here!")
             print("Steps to return")
             for step in steps:
@@ -105,8 +106,19 @@ def upRamp(steps, prologg):
     #print("went up ramp!")
     return steps
 
-def drawGrid(gX,gY,steps, ):
-    print("Setting the Scene!")
+def climbUp(steps, prologg):
+    prolog = prologg
+    climbed = list(prolog.query("climbup(monkey, [Xm, Ym], Dir)"))
+    while(climbed):
+        for climb in climbed:
+            steps.append(climb)
+            prolog.retractall("at(monkey, [Xm,Ym])")
+            prolog.assertz("at(monkey,[" + str(climb['Xm']) +"," + str(climb['Ym']) + "])")
+            print("climb!")
+            
+        climbed = list(prolog.query("climbup(monkey, [Xm, Ym], Dir)"))
+    
+    return steps
     
 def externalCall(positions):
     cap = cv2.VideoCapture(0)
