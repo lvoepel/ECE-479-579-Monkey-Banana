@@ -151,7 +151,9 @@ def externalCall(positions):
     steps = []
     #call to moving which produces a list of steps based on where we can move to 
     steps = moving(steps, prolog)
-    
+    if(not steps):
+        steps = upRamp(steps, prolog)
+        steps = climbUp(steps, prolog)
     #print out list version of plan
     print("Plan:")
     if steps:
@@ -241,7 +243,9 @@ if __name__ == '__main__' :
     steps = []
     #call to moving which produces a list of steps based on where we can move to 
     steps = moving(steps, prolog)
-    
+    if(not steps):
+        steps = upRamp(steps, prolog)
+        steps = climbUp(steps, prolog)
     #print out list version of plan
     print("Plan:")
     if steps:
