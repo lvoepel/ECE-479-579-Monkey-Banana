@@ -163,13 +163,14 @@ def externalCall(positions):
     steps = []
     #call to moving which produces a list of steps based on where we can move to 
     steps = moving(steps, prolog)
-   
+    plan = open("plan.txt", "w")
     #print out list version of plan
     print("Plan:")
     if steps:
         for step in steps:
             print(step['Xm'], step['Ym'], step["Dir"])
-    
+            plan.write(str(step)+'\n')
+    plan.close()
     img = np.ones((gX*scale+3,gY*scale+3,3), np.uint8)*255
     x = 0
     y = 0
@@ -253,13 +254,14 @@ if __name__ == '__main__' :
     steps = []
     #call to moving which produces a list of steps based on where we can move to 
     steps = moving(steps, prolog)
-    
+    plan = open("plan.txt", "w")
     #print out list version of plan
     print("Plan:")
     if steps:
         for step in steps:
             print(step['Xm'], step['Ym'], step["Dir"])
-    
+            plan.write(str(step)+'\n')
+    plan.close()
     img = np.ones((gX*scale+3,gY*scale+3,3), np.uint8)*255
     x = 0
     y = 0
