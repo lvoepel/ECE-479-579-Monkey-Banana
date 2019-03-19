@@ -6,17 +6,16 @@
 :- dynamic (
 	     at/2,   	%Where each item is at can change after running
          goal/2,	%
-         climb_goal/2,	%
-         rampGoal/2	%
+         climb_goal/2	%
 	    ).
 
 %Written for testing within SWIPL
 %retracts where everything is and then resets them at specified positions
 start :-      retractall(at(Agent,[X,Y])),
               assert(at(box,[1,1])),
-              assert(at(monkey,[0,1])),
+              assert(at(monkey,[1,2])),
               assert(at(banana,[2,1])),
-              assert(box_direction(3)). %1,2,3,4 corresponding to N, E, S, W
+              assert(box_direction(1)). %1,2,3,4 corresponding to N, E, S, W
 
 rampGoal(Xb, Yb) :- (at(banana,[Xba,Yba]), box_direction(DirB)),
 			((DirB is 1, Xb is Xba, Yb is Yba + 1);
@@ -47,22 +46,20 @@ climbable :- at(box,[Xbo,Ybo]), rampGoal(Xba, Yba), Xbo is Xba, Ybo is Yba.
 
 %goal will be location which places box between monkey and banana
 %this allows monkey to push box towards banana
-goal(X1, Y1) :- (at(box,[Xbo,Ybo]), rampGoal(Xb,Yb), at(banana,[Xba,Yba])), 
-                 ((X1 is Xbo-1, Y1 is Ybo, Xb > Xbo, not(Y1 is Yba));
-                  (X1 is Xbo+1, Y1 is Ybo, Xb < Xbo, not(Y1 is Yba));
-                  (Y1 is Ybo-1, X1 is Xbo, Yb > Ybo, not(X1 is Xba));
-                  (Y1 is Ybo+1, X1 is Xbo, Yb < Ybo), not(X1 is Xba)),
-                  not(at(banana,[X1,Y1])).
+goal(X1, Y1) :- (at(box,[Xbo,Ybo]), rampGoal(Xb,Yb)), 
+                 ((X1 is Xbo-1, Y1 is Ybo, Xb > Xbo);
+                  (X1 is Xbo+1, Y1 is Ybo, Xb < Xbo);
+                  (Y1 is Ybo-1, X1 is Xbo, Yb > Ybo);
+                  (Y1 is Ybo+1, X1 is Xbo, Yb < Ybo)).
 
-%Special type of goal for when box is at ramp goal. 
+%Special type of goal for when box is under banana. 
 %allows the robot to approach from ramp side
 climb_goal(X1, Y1) :- (at(box,[Xbo,Ybo]), rampGoal(Xb,Yb), 
                     Xbo is Xb, Ybo is Yb, box_direction(DirB)), 
                  ((X1 is Xbo-1, Y1 is Ybo, DirB is 4);
                   (X1 is Xbo+1, Y1 is Ybo, DirB is 2);
                   (Y1 is Ybo-1, X1 is Xbo, DirB is 3);
-                  (Y1 is Ybo+1, X1 is Xbo, DirB is 1)),
-                  not(at(banana,[X1,Y1])).
+                  (Y1 is Ybo+1, X1 is Xbo, DirB is 1)).
 
 %Changes monkey and box position to simulate "pushing" until box is lined up with either rampgoal X or rampgoal Y
 %pushes either north south east or west, direction corresponds to numerical value of Dir
@@ -79,9 +76,7 @@ pushto(monkey, box,[Xm1, Ym1],[Xbo1, Ybo1], Dir) :-
             Xm1 is Xm0+1, Ym1 is Ym0, Dir is 2);              %east
         (Xm0 is Xbo0+1, Ym0 is Ybo0, Xbo0 > Xba, 
             Xbo1 is Xbo0-1, Ybo1 is Ybo0, 
-            Xm1 is Xm0-1, Ym1 is Ym0, Dir is 4)),
-            not(at(banana,[Xm1,Ym1])), 
-            not(at(banana,[Xbo1,Ybo1])).             %west
+            Xm1 is Xm0-1, Ym1 is Ym0, Dir is 4)).             %west
  
 %Moves monkey without pushing box.
 %monkey will attempt to approach the goal defined in goal(X,Y)
@@ -91,7 +86,7 @@ moveto(monkey,[X1, Y1], Dir) :-
         at(monkey,[X0, Y0]), at(box,[Xb, Yb]), goal(Xg, Yg),
         ((Yg is Y0, Xg is X0, X1 is Xg, Y1 is Yg, Dir is 0);
 
-
+        %Moving north east
         ((Xg > X0, X1 is X0 + 1, Y1 is Y0, Dir is 2);              %east
         (Xg < X0, X1 is X0 - 1, Y1 is Y0, Dir is 4);              %west
         (Yg > Y0, X1 is X0, Y1 is Y0 + 1, Dir is 1);              %north
@@ -109,7 +104,7 @@ moveto(monkey,[X1, Y1], Dir) :-
         not((Yg is Y1, Xg > Xb, X1 < Xb)),    %goal is above of box, avoid below
         not((Yg is Y1, Xg < Xb, X1 > Xb)),    %goal is below of box, avoid above
 
-        not(at(box,[X1, Y1]))),not(at(banana,[X1,Y1])).
+        not(at(box,[X1, Y1]))).
 
 %Special move for monkey where it approaches climb_goal instead of goal
 movetoclimb(monkey,[X1, Y1], Dir) :-
@@ -120,7 +115,7 @@ movetoclimb(monkey,[X1, Y1], Dir) :-
         (Xg < X0, X1 is X0 - 1, Y1 is Y0, Dir is 4);              %west
         (Yg > Y0, X1 is X0, Y1 is Y0 + 1, Dir is 1);              %north
         (Yg < Y0, X1 is X0, Y1 is Y0 - 1, Dir is 3)),             %south
-        not(at(box,[X1, Y1]))),not(at(banana,[X1,Y1])).
+        not(at(box,[X1, Y1]))).
 
 
 

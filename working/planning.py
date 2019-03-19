@@ -85,7 +85,6 @@ def upRamp(steps, prologg):
         #i = i + 1
         print("starting at:" + str(prevM['Xm']) + "," + str(prevM['Ym']))
         if move['Dir'] == 0:
-            climbUp(steps, prolog)
             print("Here!")
             print("Steps to return")
             for step in steps:
@@ -104,21 +103,6 @@ def upRamp(steps, prologg):
             prolog.assertz("at(monkey,[" + str(prevM['Xm']) +"," + str(prevM['Ym']) + "])")
             return steps
     #print("went up ramp!")
-    return steps
-
-#climb up the ramp
-def climbUp(steps, prologg):
-    prolog = prologg
-    climbed = list(prolog.query("climbup(monkey, [Xm, Ym], Dir)"))
-    while(climbed):
-        for climb in climbed:
-            steps.append(climb)
-            prolog.retractall("at(monkey, [Xm,Ym])")
-            prolog.assertz("at(monkey,[" + str(climb['Xm']) +"," + str(climb['Ym']) + "])")
-            print("climb!")
-            
-        climbed = list(prolog.query("climbup(monkey, [Xm, Ym], Dir)"))
-    
     return steps
 
 def drawGrid(gX,gY,steps, ):
@@ -145,13 +129,15 @@ def externalCall(positions):
     #mX = 4
     #mY = 2
 
-    boX = int(positions.banana.x)
-    boY = int(positions.banana.y)
+    baX = int(positions.banana.x)
+    baY = int(positions.banana.y)
     #boX = 3
     #boY = 1
 
-    baX = int(positions.ramp.x)
-    baY = int(positions.ramp.y)
+    boX = int(positions.ramp.x)
+    boY = int(positions.ramp.y)
+    
+    boD = int(raw_input("Enter box direction: "))
     #baX = 2
     #baY = 2
 
@@ -160,50 +146,39 @@ def externalCall(positions):
     prolog.assertz("at(monkey,["+str(mX) +"," + str(mY) +"])")
     prolog.assertz("at(box,["+str(boX) +"," + str(boY) +"])")
     prolog.assertz("at(banana,["+str(baX) +"," + str(baY) +"])")
-    prolog.assertz("box_direction(3)")
-    prolog.assertz("banana_state(hanging)")
-    print("ramp goal is:")
-    rampgoal = list(prolog.query("rampGoal(X, Y)"))
-    print(rampgoal)
+    prolog.assertz("box_direction("+str(boD) +")")
+
     steps = []
     #call to moving which produces a list of steps based on where we can move to 
     steps = moving(steps, prolog)
     
-    plan = open("plan.txt", "w")
     #print out list version of plan
     print("Plan:")
     if steps:
         for step in steps:
             print(step['Xm'], step['Ym'], step["Dir"])
-            #print(step.keys())
-            #for item in step.values():
-            #    print(item)
-            #print(step.values())
-            plan.write(str(step)+'\n')
-    plan.close()
     
     img = np.ones((gX*scale+3,gY*scale+3,3), np.uint8)*255
     x = 0
     y = 0
     #draw grid
-    while x < gX*scale:
-        while y < gY*scale:
+    while y < gY*scale:
+        while x < gX*scale:
             cv2.rectangle(img,(y,x),(y+scale,x+scale),(0,0,0),3)
             #cv2.rectangle(img,(y+10,x+10),(y+40,x+40),(0,255,0),3)
-            #print("currently at " + str(x) +','+ str(y))
-            #print("monkey at " + str(mX) +','+ str(mY))
-            #print("result " + str(x/scale) +','+ str(y/scale))
+            print("currently at " + str(x) +','+ str(y))
+            print("monkey at " + str(mX) +','+ str(mY))
+            print("result " + str(x/scale) +','+ str(y/scale))
             if(mX == x/scale and mY == y/scale):
                 print("monkey here " + str(x) +','+ str(y))
-                cv2.rectangle(img,(x+20,y+20),(x+scale-20,y+scale-20),(19,69,139),3)
-            if(boX == x/scale and boY == y/scale):
+                cv2.rectangle(img,(x+10,y+10),(x+scale-10,y+scale-10),(19,69,139),3)
+            elif(boX == x/scale and boY == y/scale):
                 cv2.rectangle(img,(x+10,y+10),(x+scale-10,y+scale-10),(0,0,255),3)
-            if(baX == x/scale and baY == y/scale):
-                cv2.circle(img,(x+scale/2,y+scale/2), scale/2 - 20,(0,255,255),3)
+            elif(baX == x/scale and baY == y/scale):
                 cv2.rectangle(img,(x+10,y+10),(x+scale-10,y+scale-10),(0,255,255),3)
-            y = y + scale
-        y = 0
-        x = x + scale
+            x = x + scale
+        x = 0
+        y = y + scale
     i = 0
     for step in steps:
         i = i + 1
@@ -217,7 +192,11 @@ def externalCall(positions):
             cv2.line(img,(x,y),(x,y+scale),(255-i*15,0,0),5)
         elif step["Dir"] == 4:
             cv2.line(img,(x,y),(x+scale,y),(255-i*15,0,0),5)
-
+    '''
+    cv2.line(img,(5*50+25,5*50+25),(5*50+25,5*50+75),(255,0,0),5)
+    cv2.line(img,(5*50+25,5*50+25),(5*50+75,5*50+75),(255,0,255),5)
+    cv2.line(img,(5*50+25,5*50+25),(5*50+75,5*50+25),(0,0,255),5) 
+    '''
     while True:
         cv2.imshow("Image", img)
         cv2.waitKey(1)
@@ -225,9 +204,6 @@ def externalCall(positions):
         if k == 27:
             break
     cv2.destroyAllWindows()
-
-    
-
 
 if __name__ == '__main__' :
     #initialize prolog
@@ -246,6 +222,7 @@ if __name__ == '__main__' :
 
     boX = int(raw_input("Enter box X: "))
     boY = int(raw_input("Enter box Y: "))
+    boD = int(raw_input("Enter box direction: "))
     #boX = 3
     #boY = 1
 
@@ -259,49 +236,39 @@ if __name__ == '__main__' :
     prolog.assertz("at(monkey,["+str(mX) +"," + str(mY) +"])")
     prolog.assertz("at(box,["+str(boX) +"," + str(boY) +"])")
     prolog.assertz("at(banana,["+str(baX) +"," + str(baY) +"])")
-    prolog.assertz("box_direction(3)")
-    prolog.assertz("banana_state(hanging)")
+    prolog.assertz("box_direction("+str(boD) +")")
+
     steps = []
-    print("ramp goal is:")
-    print(prolog.query("rampGoal(X, Y)"))
     #call to moving which produces a list of steps based on where we can move to 
     steps = moving(steps, prolog)
     
-    plan = open("plan.txt", "w")
     #print out list version of plan
     print("Plan:")
     if steps:
         for step in steps:
             print(step['Xm'], step['Ym'], step["Dir"])
-            #print(step.keys())
-            #for item in step.values():
-            #    print(item)
-            #print(step.values())
-            plan.write(str(step)+'\n')
-    plan.close()
     
     img = np.ones((gX*scale+3,gY*scale+3,3), np.uint8)*255
     x = 0
     y = 0
     #draw grid
-    while x < gX*scale:
-        while y < gY*scale:
+    while y < gY*scale:
+        while x < gX*scale:
             cv2.rectangle(img,(y,x),(y+scale,x+scale),(0,0,0),3)
             #cv2.rectangle(img,(y+10,x+10),(y+40,x+40),(0,255,0),3)
-            #print("currently at " + str(x) +','+ str(y))
-            #print("monkey at " + str(mX) +','+ str(mY))
-            #print("result " + str(x/scale) +','+ str(y/scale))
+            print("currently at " + str(x) +','+ str(y))
+            print("monkey at " + str(mX) +','+ str(mY))
+            print("result " + str(x/scale) +','+ str(y/scale))
             if(mX == x/scale and mY == y/scale):
                 print("monkey here " + str(x) +','+ str(y))
-                cv2.rectangle(img,(x+20,y+20),(x+scale-20,y+scale-20),(19,69,139),3)
-            if(boX == x/scale and boY == y/scale):
+                cv2.rectangle(img,(x+10,y+10),(x+scale-10,y+scale-10),(19,69,139),3)
+            elif(boX == x/scale and boY == y/scale):
                 cv2.rectangle(img,(x+10,y+10),(x+scale-10,y+scale-10),(0,0,255),3)
-            if(baX == x/scale and baY == y/scale):
-                cv2.circle(img,(x+scale/2,y+scale/2), scale/2 - 20,(0,255,255),3)
+            elif(baX == x/scale and baY == y/scale):
                 cv2.rectangle(img,(x+10,y+10),(x+scale-10,y+scale-10),(0,255,255),3)
-            y = y + scale
-        y = 0
-        x = x + scale
+            x = x + scale
+        x = 0
+        y = y + scale
     i = 0
     for step in steps:
         i = i + 1
@@ -310,12 +277,24 @@ if __name__ == '__main__' :
         if step["Dir"] == 1:
             cv2.line(img,(x,y),(x,y-scale),(255-i*15,0,0),5)
         elif step["Dir"] == 2:
-            cv2.line(img,(x,y),(x-scale,y),(255-i*15,0,0),5)
+            cv2.line(img,(x,y),(x-scale,y-scale),(255-i*15,0,0),5)
         elif step["Dir"] == 3:
-            cv2.line(img,(x,y),(x,y+scale),(255-i*15,0,0),5)
+            cv2.line(img,(x,y),(x-scale,y),(255-i*15,0,0),5)
         elif step["Dir"] == 4:
+            cv2.line(img,(x,y),(x-scale,y+scale),(255-i*15,0,0),5)
+        elif step["Dir"] == 5:
+            cv2.line(img,(x,y),(x,y+scale),(255-i*15,0,0),5)
+        elif step["Dir"] == 6:
+            cv2.line(img,(x,y),(x+scale,y+scale),(255-i*15,0,0),5)
+        elif step["Dir"] == 7:
             cv2.line(img,(x,y),(x+scale,y),(255-i*15,0,0),5)
-
+        elif step["Dir"] == 8:
+            cv2.line(img,(x,y),(x+scale,y-scale),(255-i*15,0,0),5)
+    '''
+    cv2.line(img,(5*50+25,5*50+25),(5*50+25,5*50+75),(255,0,0),5)
+    cv2.line(img,(5*50+25,5*50+25),(5*50+75,5*50+75),(255,0,255),5)
+    cv2.line(img,(5*50+25,5*50+25),(5*50+75,5*50+25),(0,0,255),5) 
+    '''
     while True:
         cv2.imshow("Image", img)
         cv2.waitKey(1)
@@ -323,8 +302,5 @@ if __name__ == '__main__' :
         if k == 27:
             break
     cv2.destroyAllWindows()
-
-    
-    
 
     
