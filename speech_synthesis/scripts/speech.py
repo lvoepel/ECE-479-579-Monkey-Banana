@@ -2,8 +2,9 @@
 
 # Speech Synthesis Script
 # V1.0
+# Adapted by Philip Arola for Intelligent Robotics 2 
 # Created by Scott Matsuo for Intelligent Robotics 1 Project 2
-# Last Update - 12/03/2018
+# Last Update - 03/19/2019
 #
 #
 # Service Requests
@@ -12,8 +13,6 @@
 # Service Response
 # /status - int32
 
-from speech_synthesis.srv import synthesis_service
-import rospy
 import boto3
 import csv
 import playsound
@@ -28,6 +27,16 @@ polly_client = boto3.Session(
 	aws_secret_access_key=secret_key,
 	region_name='us-west-2').client('polly')
 
+def say_something(phrase):
+	response = polly_client.synthesize_speech(VoiceId='Hans',
+				OutputFormat='mp3', 
+				Text = phrase)
+	file = open('speech.mp3', 'w')
+	file.write(response['AudioStream'].read())
+	file.close()
+	playsound.playsound('speech.mp3', True)
+ 	return 1
+
 def handle_speech_synthesis(req):
 	response = polly_client.synthesize_speech(VoiceId='Hans',
 				OutputFormat='mp3', 
@@ -39,6 +48,8 @@ def handle_speech_synthesis(req):
  	return 1
 	
 def speech_synthesis_server():
+	from speech_synthesis.srv import synthesis_service
+	import rospy
 	rospy.init_node('speech_synthesis_server')
 	s = rospy.Service('speech_synthesis', synthesis_service, handle_speech_synthesis)
 	print("Ready to synthesize.")	
