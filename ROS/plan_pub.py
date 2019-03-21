@@ -15,22 +15,31 @@ import math
 step_num = 0
 steps = []
 directions = {3:"NORTH", 2:"EAST", 1:"SOUTH", 4:"WEST"}
+action = ''
 
 #if robot says its "done" then publish the next message
 def status_callback(msg):
-    global step_num, steps
+    global step_num, steps, action
+    print(msg.data)
     if(step_num >= len(steps)):
         goal.publish("GOAL!")
         return
-    new_dir = (steps[step_num])['Dir']
-    if msg.data == "done":
+    if msg.data == "done moving":
+        if(type(steps[step_num]) == str):
+            #if it isnt a dictionary, it contains info on the 
+            #type of action being performed
+            action = steps[step_num].strip()
+            step_num = step_num + 1
+            print("Action type will be: " + action)
+            
+            new_dir = (steps[step_num])['Dir']
         
-        print("You should be facing: " + directions[new_dir])
+            print("You should be facing: " + directions[new_dir])
+            
+            step_num = step_num + 1
+            direction.publish(action + directions[new_dir])
+            pub_status.publish("turning")
         
-        step_num = step_num + 1
-        direction.publish(directions[new_dir])
-        pub_status.publish("Turning")
-
 rospy.init_node('plan_publisher')
 
 status = rospy.Subscriber ('/robo_status', String, status_callback)
@@ -44,7 +53,10 @@ plan = open("plan.txt", "r")
 #steps = []
 for line in plan:
     print(line)
-    step = ast.literal_eval(line)
+    if(line.find("P") < 0 and line.find("M") < 0 and line.find("C") < 0):
+        step = ast.literal_eval(line)
+    else:
+        step = line
     steps.append(step)
 plan.close()
 

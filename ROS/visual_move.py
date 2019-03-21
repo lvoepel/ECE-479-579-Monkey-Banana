@@ -10,9 +10,9 @@ from geometry_msgs.msg import Twist
 from std_msgs.msg import Int32
 from std_msgs.msg import String
 
-direction = 0
+direct = ''
 
-def direction_cb(msg):
+def move_cb(msg):
     global direction
     print("WE HAVE A DIRECTION: " + str(msg.data))
     #reset odometry
@@ -25,23 +25,29 @@ def direction_cb(msg):
         move_cmd.linear.x = 0
         move.publish(move_cmd)
         if(direction == -1):
-            status.publish("done")
+            status.publish("done moving")
             direction = 0
         else:
             status.publish("backing up")
-            command.publish("BACK")
+            command.publish("B" + direct)
     else:
         move_cmd.angular.z = 0
-        move_cmd.linear.x = .1 * msg.data
+        move_cmd.linear.x = .075 * msg.data
         direction = msg.data
         move.publish(move_cmd)
-        
-    
     return
+
+def direction_cb(msg):
+    global direct
+    direct = msg.data
+    direct = direct[1:]
+    return
+
 rospy.init_node('move_robot')
 
 command = rospy.Publisher('/direction', String, queue_size=1)
-forward = rospy.Subscriber("/move",Int32,direction_cb)
+direction = rospy.Subscriber("/direction",String, direction_cb)
+go = rospy.Subscriber("/move",Int32,move_cb)
 move = rospy.Publisher('cmd_vel_mux/input/navi', Twist, queue_size=1)
 status = rospy.Publisher ('/robo_status', String, queue_size=1)
 

@@ -10,6 +10,8 @@ from std_msgs.msg import String
 gridX = 4
 gridY = 3
 command = ""
+direction = ""
+moveType = ""
 facing = ""
 forward_val = 0
 class Object_Telemetry:
@@ -26,7 +28,7 @@ class All_Objects:
     ramp = Object_Telemetry()
 
 def frame_loop(cap, display=False):
-    global command, facing, forward_val
+    global command, facing, forward_val, direction, moveType
     """capture aruco
     
     Arguments:
@@ -65,7 +67,7 @@ def frame_loop(cap, display=False):
         #y = (int(corners[i-1][0][0][1]) + int(corners[i-1][0][1][1]) + int(corners[i-1][0][2][1]) + int(corners[i-1][0][3][1])) / 4
         #print(x, y)
         j = i.ravel()
-        print(j)
+        #print(j)
         #x and Y represent centers of item. Found by averaging corners
         x = (j[0] + j[2] + j[4] + j[6])/4
         y = (j[1] + j[3] + j[5] + j[7])/4
@@ -75,7 +77,7 @@ def frame_loop(cap, display=False):
             positions.monkey.y=y
             #if(yDifFrontM > 15 or yDifFrontM < -15):
             #    direction.publish(90)
-            if(command == "WEST"):
+            if(direction == "WEST"):
                 print(command)
                 if((j[0] - j[6] > 5 or j[0] - j[6] < -5) or (j[0] < j[2] or j[1] < j[5])):
                     if(j[0] < j[6]):
@@ -84,9 +86,8 @@ def frame_loop(cap, display=False):
                         turn.publish(-1)
                 else:
                     turn.publish(0)
-                    facing = command
-                    command = ""
-            elif(command == "EAST"):
+                    facing = direction
+            elif(direction == "EAST"):
                 print(command)
                 if((j[0] - j[6] > 5 or j[0] - j[6] < -5) or (j[2] < j[0] or j[5] < j[1])):
                     if(j[0] > j[6]):
@@ -95,9 +96,8 @@ def frame_loop(cap, display=False):
                         turn.publish(-1)
                 else:
                     turn.publish(0)
-                    facing = command
-                    command = ""
-            elif(command == "NORTH"):
+                    facing = direction
+            elif(direction == "NORTH"):
                 print(command)
                 if((j[0] - j[2] > 5 or j[0] - j[2] < -5) or (j[6] < j[0] or j[1] < j[3])):
                     print("TURN")
@@ -107,9 +107,8 @@ def frame_loop(cap, display=False):
                         turn.publish(-1)
                 else:
                     turn.publish(0)
-                    facing = command
-                    command = ""
-            elif(command == "SOUTH"):
+                    facing = direction
+            elif(direction == "SOUTH"):
                 print(command)
                 print(j)
                 if((j[0] - j[2] > 5 or j[0] - j[2] < -5) or (j[0] < j[6] or j[3] < j[1])):
@@ -120,96 +119,169 @@ def frame_loop(cap, display=False):
                         turn.publish(-1)
                 else:
                     turn.publish(0)
-                    facing = command
-                    command = ""
-            elif(command == "FORWARD"):
-                print(command)
-                if(facing == "EAST"):
-                    if(forward_val == 0):
-                        forward_val = (j[0]/160)*160 + 200
-                    else:
-                        if j[0] < forward_val:
-                            move.publish(1)
+                    facing = direction
+            if(facing == direction):
+                print(moveType)
+                if(moveType == "B"):
+                    if(facing == "EAST"):
+                        if(forward_val == 0):
+                            forward_val = (int(x)/160)*160 - 80
                         else:
-                            move.publish(0) 
-                            forward_val = 0
-                            command = ''
-                            print("DELETED COMMAND")
-                elif(facing == "WEST"):
-                    if(forward_val == 0):
-                        forward_val = (j[0]/160)*160 - 200
-                    else:
-                        if j[0] > forward_val:
-                            move.publish(1)
+                            if x > forward_val:
+                                move.publish(-1)
+                            else:
+                                move.publish(0) 
+                                forward_val = 0
+                                command = ''
+                                direction = ''
+                                moveType = ''
+                                print("DELETED COMMAND")
+                    elif(facing == "WEST"):
+                        if(forward_val == 0):
+                            forward_val = (int(x)/160)*160 + 80
                         else:
-                            move.publish(0) 
-                            forward_val = 0
-                            command = ''
-                            print("DELETED COMMAND")
-                elif(facing == "NORTH"):
-                    if(forward_val == 0):
-                        forward_val = (j[1]/160)*160 - 200
-                    else:
-                        if j[1] > forward_val:
-                            move.publish(1)
+                            if x < forward_val:
+                                move.publish(-1)
+                            else:
+                                move.publish(0) 
+                                forward_val = 0
+                                command = ''
+                                direction = ''
+                                moveType = ''
+                                print("DELETED COMMAND")
+                    elif(facing == "NORTH"):
+                        if(forward_val == 0):
+                            forward_val = (int(y)/160)*160 + 80
                         else:
-                            move.publish(0) 
-                            forward_val = 0
-                            command = ''
-                elif(facing == "SOUTH"):
-                    if(forward_val == 0):
-                        forward_val = (j[3]/160)*160 +200
-                    else:
-                        if j[3] < forward_val:
-                            move.publish(1)
+                            if y < forward_val:
+                                move.publish(-1)
+                            else:
+                                move.publish(0) 
+                                forward_val = 0
+                                command = ''
+                                direction = ''
+                                moveType = ''
+                                print("DELETED COMMAND")
+                    elif(facing == "SOUTH"):
+                        if(forward_val == 0):
+                            forward_val = (int(y)/160)*160 - 80
                         else:
-                            move.publish(0) 
-                            forward_val = 0
-                            command = ''
-            elif(command == "BACK"):
-                print(command)
-                if(facing == "EAST"):
-                    if(forward_val == 0):
-                        forward_val = j[0] - 20
-                    else:
-                        if j[0] > forward_val:
-                            move.publish(-1)
+                            if y > forward_val:
+                                move.publish(-1)
+                            else:
+                                move.publish(0) 
+                                forward_val = 0
+                                command = ''
+                                direction = ''
+                                moveType = ''
+                                print("DELETED COMMAND")
+                elif(moveType == "M"):
+                    if(facing == "EAST"):
+                        if(forward_val == 0):
+                            forward_val = (int(x)/160)*160 + 240
                         else:
-                            move.publish(0) 
-                            forward_val = 0
-                            command = ''
-                            print("DELETED COMMAND")
-                elif(facing == "WEST"):
-                    if(forward_val == 0):
-                        forward_val = j[0] + 20
-                    else:
-                        if j[0] < forward_val:
-                            move.publish(-1)
+                            if x < forward_val:
+                                move.publish(1)
+                            else:
+                                move.publish(0) 
+                                forward_val = 0
+                                command = ''
+                                direction = ''
+                                moveType = ''
+                                print("DELETED COMMAND")
+                    elif(facing == "WEST"):
+                        if(forward_val == 0):
+                            forward_val = (int(x)/160)*160 - 80
                         else:
-                            move.publish(0) 
-                            forward_val = 0
-                            command = ''
-                            print("DELETED COMMAND")
-                elif(facing == "NORTH"):
-                    if(forward_val == 0):
-                        forward_val = j[1] + 20
-                    else:
-                        if j[1] < forward_val:
-                            move.publish(-1)
+                            if x > forward_val:
+                                move.publish(1)
+                            else:
+                                move.publish(0) 
+                                forward_val = 0
+                                command = ''
+                                direction = ''
+                                moveType = ''
+                                print("DELETED COMMAND")
+                    elif(facing == "NORTH"):
+                        if(forward_val == 0):
+                            forward_val = (int(y)/160)*160 - 80
                         else:
-                            move.publish(0) 
-                            forward_val = 0
-                            command = ''
-                elif(facing == "SOUTH"):
-                    if(forward_val == 0):
-                        forward_val = j[1] - 20
-                    else:
-                        if j[1] > forward_val:
-                            move.publish(-1)
+                            if y > forward_val:
+                                move.publish(1)
+                            else:
+                                move.publish(0) 
+                                forward_val = 0
+                                command = ''
+                                direction = ''
+                                moveType = ''
+                                print("DELETED COMMAND")
+                    elif(facing == "SOUTH"):
+                        if(forward_val == 0):
+                            forward_val = (int(y)/160)*160 + 240
                         else:
-                            move.publish(0) 
-                            forward_val = 0
-                            command = ''
+                            if y < forward_val:
+                                move.publish(1)
+                            else:
+                                move.publish(0) 
+                                forward_val = 0
+                                command = ''
+                                direction = ''
+                                moveType = ''
+                                print("DELETED COMMAND")
+                elif(moveType == "C"):
+                    if(facing == "EAST"):
+                        if(forward_val == 0):
+                            forward_val = (int(x)/160)*160 + 400
+                        else:
+                            if x < forward_val:
+                                move.publish(1)
+                            else:
+                                move.publish(0) 
+                                forward_val = 0
+                                command = ''
+                                direction = ''
+                                moveType = ''
+                                print("DELETED COMMAND")
+                    elif(facing == "WEST"):
+                        if(forward_val == 0):
+                            forward_val = (int(x)/160)*160 - 240
+                        else:
+                            if x > forward_val:
+                                move.publish(1)
+                            else:
+                                move.publish(0) 
+                                forward_val = 0
+                                command = ''
+                                direction = ''
+                                moveType = ''
+                                print("DELETED COMMAND")
+                    elif(facing == "NORTH"):
+                        if(forward_val == 0):
+                            forward_val = (int(y)/160)*160 - 240
+                        else:
+                            if y > forward_val:
+                                move.publish(1)
+                            else:
+                                move.publish(0) 
+                                forward_val = 0
+                                command = ''
+                                direction = ''
+                                moveType = ''
+                                print("DELETED COMMAND")
+                    elif(facing == "SOUTH"):
+                        if(forward_val == 0):
+                            forward_val = (int(y)/160)*160 + 400
+                        else:
+                            if y < forward_val:
+                                move.publish(1)
+                            else:
+                                move.publish(0) 
+                                forward_val = 0
+                                command = ''
+                                direction = ''
+                                moveType = ''
+                                print("DELETED COMMAND")
+            
         elif ids[count] == 2:
             #print("banana")
             positions.banana.x=x
@@ -218,6 +290,63 @@ def frame_loop(cap, display=False):
             #print("ramp")
             positions.ramp.x=x
             positions.ramp.y=y
+            if(facing == direction):
+                print(moveType)
+                if(moveType == "P"):
+                    if(facing == "EAST"):
+                        if(forward_val == 0):
+                            forward_val = (int(x)/160)*160 + 160 + 80
+                        else:
+                            if x < forward_val:
+                                move.publish(1)
+                            else:
+                                move.publish(0) 
+                                forward_val = 0
+                                command = ''
+                                direction = ''
+                                moveType = ''
+                                print("DELETED COMMAND")
+                    elif(facing == "WEST"):
+                        if(forward_val == 0):
+                            forward_val = (int(x)/160)*160 - 80
+                        else:
+                            print("we are at: " + str(x))
+                            print("goal is: " + str(forward_val))
+                            if x > forward_val:
+                                move.publish(1)
+                            else:
+                                move.publish(0) 
+                                forward_val = 0
+                                command = ''
+                                direction = ''
+                                moveType = ''
+                                print("DELETED COMMAND")
+                    elif(facing == "NORTH"):
+                        if(forward_val == 0):
+                            forward_val = (int(y)/160)*160 - 80
+                        else:
+                            if y > forward_val:
+                                move.publish(1)
+                            else:
+                                move.publish(0) 
+                                forward_val = 0
+                                command = ''
+                                direction = ''
+                                moveType = ''
+                                print("DELETED COMMAND")
+                    elif(facing == "SOUTH"):
+                        if(forward_val == 0):
+                            forward_val = (int(y)/160)*160 + 160 + 80
+                        else:
+                            if y < forward_val:
+                                move.publish(1)
+                            else:
+                                move.publish(0) 
+                                forward_val = 0
+                                command = ''
+                                direction = ''
+                                moveType = ''
+                                print("DELETED COMMAND")
         #print(x, y)
         
     if display is True:
@@ -235,9 +364,13 @@ def frame_loop(cap, display=False):
     return positions
 
 def direction_cb(msg):
-    global command
+    global command, direction, moveType
     command = msg.data
+    direction = command[1:]
+    moveType = command[0]
     print("NEW COMMAND IS: " + str(command))
+    print("Direction is: " + direction)
+    print("move type is: " + moveType)
     return
 
 rospy.init_node('camera_feedback')

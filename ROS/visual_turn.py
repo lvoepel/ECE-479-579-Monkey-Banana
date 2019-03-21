@@ -23,7 +23,6 @@ def direction_cb(msg):
         move_cmd.linear.x = 0
         move.publish(move_cmd)
         status.publish("Done Turning")
-        command.publish("FORWARD")
     else:
         move_cmd.angular.z = .35 * msg.data
         move_cmd.linear.x = 0
