@@ -28,51 +28,54 @@ def pushing(steps, prologg):
 def moving(steps, prologg):
     prolog = prologg
     moves = list(prolog.query("moveto(monkey, [Xm, Ym], Dir)"))
-    
-    for move in moves:
-        prevM = list(prolog.query("at(monkey, [Xm, Ym])"))[0]
-        prevB = list(prolog.query("at(box, [Xb, Yb])"))[0]
-        print("starting at:" + str(prevM['Xm']) + "," + str(prevM['Ym']))
-        #if direction is 0 then we dont move. 
-        #Box either needs to be pushed or 
-        #Box is already under banana and monkey has to climb
-        if move['Dir'] == 0:
-            #attempt to push the box first, if no push occurs 
-            #nothing is lost but time. 
-            steps = pushing(steps, prolog)
-            #attempt to move again If box wasn't pushed or is under
-            #banana nothing happens
-            steps = moving(steps, prolog)
-            #Attempt to approach ramp on climbing side
-            steps = goToRamp(steps, prolog)
+    if(len(moves) == 0):
+        goToRamp(steps, prolog)
+        return steps
+    else:
+        for move in moves:
+            prevM = list(prolog.query("at(monkey, [Xm, Ym])"))[0]
+            prevB = list(prolog.query("at(box, [Xb, Yb])"))[0]
+            print("starting at:" + str(prevM['Xm']) + "," + str(prevM['Ym']))
+            #if direction is 0 then we dont move. 
+            #Box either needs to be pushed or 
+            #Box is already under banana and monkey has to climb
+            if move['Dir'] == 0:
+                #attempt to push the box first, if no push occurs 
+                #nothing is lost but time. 
+                steps = pushing(steps, prolog)
+                #attempt to move again If box wasn't pushed or is under
+                #banana nothing happens
+                steps = moving(steps, prolog)
+                #Attempt to approach ramp on climbing side
+                steps = goToRamp(steps, prolog)
 
-            #return monkey and box to states they were in during previous call
-            prolog.retractall("at(monkey, [Xm,Ym])")
-            prolog.assertz("at(monkey,[" + str(prevM['Xm']) +"," + str(prevM['Ym']) + "])")
-            prolog.retractall("at(box, [Xb,Yb])")
-            prolog.assertz("at(box,[" + str(prevB['Xb']) +"," + str(prevB['Yb']) + "])")
+                #return monkey and box to states they were in during previous call
+                prolog.retractall("at(monkey, [Xm,Ym])")
+                prolog.assertz("at(monkey,[" + str(prevM['Xm']) +"," + str(prevM['Ym']) + "])")
+                prolog.retractall("at(box, [Xb,Yb])")
+                prolog.assertz("at(box,[" + str(prevB['Xb']) +"," + str(prevB['Yb']) + "])")
 
-            return steps
+                return steps
 
-        #if we are able to move
-        else:
-            #add move to current list of steps
-            steps.append("M")            
-            steps.append(move)
+            #if we are able to move
+            else:
+                #add move to current list of steps
+                steps.append("M")            
+                steps.append(move)
 
-            #change monkey position to where next option is
-            prolog.retractall("at(monkey, [Xm,Ym])")
-            prolog.assertz("at(monkey,[" + str(move['Xm']) +"," + str(move['Ym']) + "])")
+                #change monkey position to where next option is
+                prolog.retractall("at(monkey, [Xm,Ym])")
+                prolog.assertz("at(monkey,[" + str(move['Xm']) +"," + str(move['Ym']) + "])")
 
-            #move again at the current position
-            moving(steps, prolog)
+                #move again at the current position
+                moving(steps, prolog)
 
-            #Return monkey position to previous value
-            prolog.retractall("at(monkey, [Xm,Ym])")
-            prolog.assertz("at(monkey,[" + str(prevM['Xm']) +"," + str(prevM['Ym']) + "])")
+                #Return monkey position to previous value
+                prolog.retractall("at(monkey, [Xm,Ym])")
+                prolog.assertz("at(monkey,[" + str(prevM['Xm']) +"," + str(prevM['Ym']) + "])")
 
-            return steps
-    return steps
+                return steps
+        return steps
 
 #Calls move to climb which is a special version of move. 
 #monkey will move to the side of the box where the ramp is located 
@@ -138,8 +141,8 @@ def externalCall(positions):
     
     #gX = str(raw_input("Enter X size of graph: "))
     #gY = str(raw_input("Enter Y size of graph: "))
-    gX = 7
-    gY = 9
+    gX = 3
+    gY = 4
     #get User input for where everything is(will be changed to opencv)
     mX = int(positions.monkey.x)
     mY = int(positions.monkey.y)
@@ -232,8 +235,8 @@ if __name__ == '__main__' :
     
     #gX = str(raw_input("Enter X size of graph: "))
     #gY = str(raw_input("Enter Y size of graph: "))
-    gX = 7
-    gY = 9
+    gX = 3
+    gY = 4
     #get User input for where everything is(will be changed to opencv)
     mX = int(raw_input("Enter Monkey X: "))
     mY = int(raw_input("Enter Monkey Y: "))

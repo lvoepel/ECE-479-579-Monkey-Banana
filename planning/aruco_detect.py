@@ -80,9 +80,9 @@ def frame_loop(cap, display=False):
             elif(j[0] - j[6] < 10 and j[0] - j[6] > -10 and j[0] > j[2] and j[1] > j[5]):          
                 positions.ramp.dir = 1
             elif(j[0] - j[2] < 10 and j[0] - j[2] > -10 and j[0] < j[4] and j[1] > j[3]):
-                positions.ramp.dir = 2
-            elif(j[0] - j[2] < 10 and j[0] - j[2] > -10 and j[0] > j[4] and j[1] < j[3]):
                 positions.ramp.dir = 4
+            elif(j[0] - j[2] < 10 and j[0] - j[2] > -10 and j[0] > j[4] and j[1] < j[3]):
+                positions.ramp.dir = 2
             else:
                 positions.ramp.dir = 0
         #print(x, y)
