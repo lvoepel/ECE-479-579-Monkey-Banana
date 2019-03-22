@@ -21,10 +21,10 @@ action = ''
 def status_callback(msg):
     global step_num, steps, action
     #print(msg.data)
-    if(step_num >= len(steps) -2):
+    if(step_num >= len(steps) - 2):
         goal.publish("GOAL!")
         return
-    if msg.data == "done moving":
+    elif msg.data == "done moving":
         if(type(steps[step_num]) == str):
             #if it isnt a dictionary, it contains info on the 
             #type of action being performed

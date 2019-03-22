@@ -35,7 +35,7 @@ def frame_loop(cap, display=False):
         cap {open cv capture object} -- the opencv device to view
     
     Keyword Arguments:
-        display {bool} -- Print debug to stdout and display the OpenCV frame (default: {False})
+        display {bool} -- Print debug to stdout and display the OpenCV frame (default: {False})s
     
     Returns:
         All_Objects -- An All_Objects object containing the detected positions of each object
@@ -355,9 +355,9 @@ def frame_loop(cap, display=False):
         #print(rejectedImgPoints)
         # Add indicatiors and grid
         for i in range(1, gridX):
-            cv2.line(gray, ((width/gridX)*i, 0), ((width/gridX)*i, height), (255, 255, 0), 1, 1)
+            cv2.line(gray, ((width/gridX)*i, 0), ((width/gridX)*i, height), (255, 255, 255), 2, 1)
         for i in range(1, gridY):
-            cv2.line(gray, (0, (height/gridY)*i), (width, (height/gridY)*i), (255, 255, 0), 1, 1)
+            cv2.line(gray, (0, (height/gridY)*i), (width, (height/gridY)*i), (255, 255, 255), 2, 1)
         # Display the resulting frame
         cv2.imshow('frame',gray)
 
