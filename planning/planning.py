@@ -1,6 +1,5 @@
 import numpy as np
 from pyswip import Prolog
-from colorama import Fore, Back, Style
 import cv2
 
 #simulates steps taken while the monkey is pushing the box
