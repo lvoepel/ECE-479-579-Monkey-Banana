@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 import cv2.aruco as aruco
 from pyswip import Prolog
-from colorama import Fore, Back, Style
+
 # Local library import
 import aruco_detect as detect
 import planning as planning
