@@ -125,7 +125,7 @@ def frame_loop(cap, display=False):
                 if(moveType == "B"):
                     if(facing == "EAST"):
                         if(forward_val == 0):
-                            forward_val = (int(x)/160)*160 - 80
+                            forward_val = (int(x)/160)*160 + 80
                         else:
                             if x > forward_val:
                                 move.publish(-1)
@@ -133,7 +133,7 @@ def frame_loop(cap, display=False):
                                 move.publish(0) 
                                 forward_val = 0
                                 command = ''
-                                direction = ''
+                                ##direction = ''
                                 moveType = ''
                                 print("DELETED COMMAND")
                     elif(facing == "WEST"):
@@ -146,7 +146,7 @@ def frame_loop(cap, display=False):
                                 move.publish(0) 
                                 forward_val = 0
                                 command = ''
-                                direction = ''
+                                ##direction = ''
                                 moveType = ''
                                 print("DELETED COMMAND")
                     elif(facing == "NORTH"):
@@ -159,12 +159,12 @@ def frame_loop(cap, display=False):
                                 move.publish(0) 
                                 forward_val = 0
                                 command = ''
-                                direction = ''
+                                ##direction = ''
                                 moveType = ''
                                 print("DELETED COMMAND")
                     elif(facing == "SOUTH"):
                         if(forward_val == 0):
-                            forward_val = (int(y)/160)*160 - 80
+                            forward_val = (int(y)/160)*160 + 80
                         else:
                             if y > forward_val:
                                 move.publish(-1)
@@ -172,7 +172,7 @@ def frame_loop(cap, display=False):
                                 move.publish(0) 
                                 forward_val = 0
                                 command = ''
-                                direction = ''
+                                ##direction = ''
                                 moveType = ''
                                 print("DELETED COMMAND")
                 elif(moveType == "M"):
@@ -186,7 +186,7 @@ def frame_loop(cap, display=False):
                                 move.publish(0) 
                                 forward_val = 0
                                 command = ''
-                                direction = ''
+                                #direction = ''
                                 moveType = ''
                                 print("DELETED COMMAND")
                     elif(facing == "WEST"):
@@ -199,7 +199,7 @@ def frame_loop(cap, display=False):
                                 move.publish(0) 
                                 forward_val = 0
                                 command = ''
-                                direction = ''
+                                #direction = ''
                                 moveType = ''
                                 print("DELETED COMMAND")
                     elif(facing == "NORTH"):
@@ -212,7 +212,7 @@ def frame_loop(cap, display=False):
                                 move.publish(0) 
                                 forward_val = 0
                                 command = ''
-                                direction = ''
+                                #direction = ''
                                 moveType = ''
                                 print("DELETED COMMAND")
                     elif(facing == "SOUTH"):
@@ -225,13 +225,13 @@ def frame_loop(cap, display=False):
                                 move.publish(0) 
                                 forward_val = 0
                                 command = ''
-                                direction = ''
+                                #direction = ''
                                 moveType = ''
                                 print("DELETED COMMAND")
                 elif(moveType == "C"):
                     if(facing == "EAST"):
                         if(forward_val == 0):
-                            forward_val = (int(x)/160)*160 + 400
+                            forward_val = (int(x)/160)*160 + 360
                         else:
                             if x < forward_val:
                                 move.publish(1)
@@ -239,12 +239,12 @@ def frame_loop(cap, display=False):
                                 move.publish(0) 
                                 forward_val = 0
                                 command = ''
-                                direction = ''
+                                #direction = ''
                                 moveType = ''
                                 print("DELETED COMMAND")
                     elif(facing == "WEST"):
                         if(forward_val == 0):
-                            forward_val = (int(x)/160)*160 - 240
+                            forward_val = (int(x)/160)*160 - 200
                         else:
                             if x > forward_val:
                                 move.publish(1)
@@ -252,12 +252,12 @@ def frame_loop(cap, display=False):
                                 move.publish(0) 
                                 forward_val = 0
                                 command = ''
-                                direction = ''
+                                #direction = ''
                                 moveType = ''
                                 print("DELETED COMMAND")
                     elif(facing == "NORTH"):
                         if(forward_val == 0):
-                            forward_val = (int(y)/160)*160 - 240
+                            forward_val = (int(y)/160)*160 - 200
                         else:
                             if y > forward_val:
                                 move.publish(1)
@@ -265,12 +265,12 @@ def frame_loop(cap, display=False):
                                 move.publish(0) 
                                 forward_val = 0
                                 command = ''
-                                direction = ''
+                                #direction = ''
                                 moveType = ''
                                 print("DELETED COMMAND")
                     elif(facing == "SOUTH"):
                         if(forward_val == 0):
-                            forward_val = (int(y)/160)*160 + 400
+                            forward_val = (int(y)/160)*160 + 360
                         else:
                             if y < forward_val:
                                 move.publish(1)
@@ -278,7 +278,7 @@ def frame_loop(cap, display=False):
                                 move.publish(0) 
                                 forward_val = 0
                                 command = ''
-                                direction = ''
+                                #direction = ''
                                 moveType = ''
                                 print("DELETED COMMAND")
             
@@ -303,7 +303,7 @@ def frame_loop(cap, display=False):
                                 move.publish(0) 
                                 forward_val = 0
                                 command = ''
-                                direction = ''
+                                #direction = ''
                                 moveType = ''
                                 print("DELETED COMMAND")
                     elif(facing == "WEST"):
@@ -318,7 +318,7 @@ def frame_loop(cap, display=False):
                                 move.publish(0) 
                                 forward_val = 0
                                 command = ''
-                                direction = ''
+                                #direction = ''
                                 moveType = ''
                                 print("DELETED COMMAND")
                     elif(facing == "NORTH"):
@@ -331,7 +331,7 @@ def frame_loop(cap, display=False):
                                 move.publish(0) 
                                 forward_val = 0
                                 command = ''
-                                direction = ''
+                                #direction = ''
                                 moveType = ''
                                 print("DELETED COMMAND")
                     elif(facing == "SOUTH"):
@@ -344,7 +344,7 @@ def frame_loop(cap, display=False):
                                 move.publish(0) 
                                 forward_val = 0
                                 command = ''
-                                direction = ''
+                                #direction = ''
                                 moveType = ''
                                 print("DELETED COMMAND")
         #print(x, y)

@@ -20,8 +20,8 @@ action = ''
 #if robot says its "done" then publish the next message
 def status_callback(msg):
     global step_num, steps, action
-    print(msg.data)
-    if(step_num >= len(steps)):
+    #print(msg.data)
+    if(step_num >= len(steps) -2):
         goal.publish("GOAL!")
         return
     if msg.data == "done moving":

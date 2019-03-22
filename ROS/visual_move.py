@@ -11,9 +11,10 @@ from std_msgs.msg import Int32
 from std_msgs.msg import String
 
 direct = ''
-
+moveType = ''
+direction = 0
 def move_cb(msg):
-    global direction
+    global direction, direct, moveType
     print("WE HAVE A DIRECTION: " + str(msg.data))
     #reset odometry
     #timer = time()
@@ -21,25 +22,27 @@ def move_cb(msg):
     #    reset_odom.publish(Empty())
     r = rospy.Rate(10)
     if(msg.data == 0):
-        move_cmd.angular.z = 0
-        move_cmd.linear.x = 0
-        move.publish(move_cmd)
-        if(direction == -1):
+        #move_cmd.angular.z = 0
+        
+        if(moveType != "P" or direction == -1):
+            move_cmd.linear.x = 0
+            move.publish(move_cmd)            
             status.publish("done moving")
             direction = 0
         else:
             status.publish("backing up")
             command.publish("B" + direct)
     else:
-        move_cmd.angular.z = 0
-        move_cmd.linear.x = .075 * msg.data
+        #move_cmd.angular.z = 0
+        move_cmd.linear.x = .08 * msg.data
         direction = msg.data
         move.publish(move_cmd)
     return
 
 def direction_cb(msg):
-    global direct
+    global direct, moveType
     direct = msg.data
+    moveType = direct[0]
     direct = direct[1:]
     return
 

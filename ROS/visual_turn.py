@@ -9,9 +9,9 @@ import time
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Int32
 from std_msgs.msg import String
-
+last_dir = 0
 def direction_cb(msg):
-    global target, init_yaw
+    global target, init_yaw, last_dir
     print("WE HAVE A DIRECTION: " + str(msg.data))
     #reset odometry
     #timer = time()
@@ -19,14 +19,18 @@ def direction_cb(msg):
     #    reset_odom.publish(Empty())
     r = rospy.Rate(10)
     if(msg.data == 0):
-        move_cmd.angular.z = 0
-        move_cmd.linear.x = 0
-        move.publish(move_cmd)
-        status.publish("Done Turning")
+        if last_dir != 0:
+            move_cmd.angular.z = 0
+            move_cmd.linear.x = 0
+            move.publish(move_cmd)
+            last_dir = 0
+            status.publish("Done Turning")
     else:
+        print("TURNING")
         move_cmd.angular.z = .35 * msg.data
         move_cmd.linear.x = 0
         move.publish(move_cmd)
+        last_dir = msg.data
         
     
     return
