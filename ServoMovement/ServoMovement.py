@@ -73,11 +73,24 @@ class ServoMovement:
         rospy.sleep(float(delay))
         
         """
-        b=-25
-        e=60
-        self.input_object.goto(7,b, speed=SERVO_SPEED, degrees=True)
+
+        a=150
+        b=-50
+        c= -50
+        d= -15
+        e= 60
+
+
+        self.input_object.goto(7, b, speed=SERVO_SPEED, degrees=True)
         time.sleep(0.5)
+        self.input_object.goto(8, c, speed=SERVO_SPEED, degrees=True)
+        time.sleep(0.5)
+        self.input_object.goto(9, d, speed=SERVO_SPEED, degrees=True)
+        time.sleep(2.0)
+        # e = 100
         self.input_object.goto(10, e, speed=SERVO_SPEED, degrees=True)
+        time.sleep(0.5)
+        self.input_object.goto(6, a, speed=SERVO_SPEED, degrees=True)
         time.sleep(0.5)
 
 
@@ -115,13 +128,14 @@ class ServoMovement:
         #e = 100
         self.input_object.goto(10, e, speed=SERVO_SPEED, degrees=True)
         time.sleep(0.5)
+        
         print("A: {} B: {} C: {} D: {} E: {}".format(a,
                                                      b,
                                                      c,
                                                      d,
                                                     e))
-
         """
+
 
         return
 
@@ -215,6 +229,7 @@ class ServoMovement:
         self.input_object.goto(7, SERVO_SETTING[POSSIBLE_POSITIONS[0]]["b"], speed=SERVO_SPEED, degrees=True)
         time.sleep(0.5)
         print("C: {}".format(c))
+        c=-100
         self.input_object.goto(8, SERVO_SETTING[POSSIBLE_POSITIONS[0]]["c"], speed=SERVO_SPEED, degrees=True)
         time.sleep(0.5)
         self.input_object.goto(9, SERVO_SETTING[POSSIBLE_POSITIONS[0]]["d"], speed=SERVO_SPEED, degrees=True)
@@ -227,10 +242,10 @@ class ServoMovement:
                                                      SERVO_SETTING[POSSIBLE_POSITIONS[0]]["d"],
                                                      SERVO_SETTING[POSSIBLE_POSITIONS[0]]["e"]))
 
-        a=0
-        b=0
-        c=0
-        d=-90
+        a=75
+        b=-50
+        c=-100
+        d=-15
         e=60
 
 
@@ -312,7 +327,7 @@ if __name__ == "__main__":
             print("FLag Set")
             flag=0
             motion_play()
-
+   
 
     try:
         rospy()
