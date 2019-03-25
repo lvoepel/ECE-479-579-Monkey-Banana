@@ -142,17 +142,7 @@ class ServoMovement:
     def collect(self):
         print("Return")
         # time.sleep(1.5)
-        """
-             pub1.publish(float(SERVO_SETTING[POSSIBLE_POSITIONS[2]]["a"]))
-             pub2.publish(float(SERVO_SETTING[POSSIBLE_POSITIONS[2]]["b"]))
-             pub3.publish(float(SERVO_SETTING[POSSIBLE_POSITIONS[2]]["c"]))
-             pub4.publish(float(SERVO_SETTING[POSSIBLE_POSITIONS[2]]["d"]))
-             pub5.publish(float(SERVO_SETTING[POSSIBLE_POSITIONS[2]]["e"]))
-             # delay between motions
-             rospy.sleep(float(delay))
-        """
-
-
+    
         self.input_object.goto(6, SERVO_SETTING[POSSIBLE_POSITIONS[2]]["a"], speed=SERVO_SPEED, degrees=True)
         time.sleep(0.5)
         self.input_object.goto(7, SERVO_SETTING[POSSIBLE_POSITIONS[2]]["d"], speed=SERVO_SPEED, degrees=True)
