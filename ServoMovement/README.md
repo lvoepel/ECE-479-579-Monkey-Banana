@@ -1,6 +1,6 @@
 # Servo Movement 
 
-## Added Two Files, First is the ServoMovement.py file and the second one is the global header file which has all the imports
+## Added One File, ServoMovement.py file .
 
 ### There are 5 Servos on the Arm IDs 6 through 10 out of which Servos 6 and 10 are specialised.
 
