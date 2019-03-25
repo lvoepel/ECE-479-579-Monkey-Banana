@@ -228,8 +228,13 @@ if __name__ == "__main__":
     servo_class = ServoMovement(serial_connection)
     # reset the hand before1
     servo_class.reset()
-    motion_play()
-    servo_class.reset()
+    while(1):
+              file=open('arm_movemwnt.txt','r')
+              print("File opened")
+              if(lines>0):
+                print("Lets go grab the banana")
+                motion_play()
+                servo_class.reset()
 
 
  
