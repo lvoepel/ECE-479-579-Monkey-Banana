@@ -63,17 +63,6 @@ class ServoMovement:
         print("Pick Up")
         global a,b,c,d,e
 
-        """
-        pub1.publish(float(SERVO_SETTING[POSSIBLE_POSITIONS[1]]["a"]))
-        pub2.publish(float(SERVO_SETTING[POSSIBLE_POSITIONS[1]]["b"]))
-        pub3.publish(float(SERVO_SETTING[POSSIBLE_POSITIONS[1]]["c"]))
-        pub4.publish(float(SERVO_SETTING[POSSIBLE_POSITIONS[1]]["d"]))
-        pub5.publish(float(SERVO_SETTING[POSSIBLE_POSITIONS[1]]["e"]))
-        # delay between motions
-        rospy.sleep(float(delay))
-        
-        """
-
         a=150
         b=-50
         c= -50
@@ -113,28 +102,7 @@ class ServoMovement:
                                                      SERVO_SETTING[POSSIBLE_POSITIONS[1]]["b"],
                                                      SERVO_SETTING[POSSIBLE_POSITIONS[1]]["c"],
                                                      SERVO_SETTING[POSSIBLE_POSITIONS[1]]["d"],
-                                                     SERVO_SETTING[POSSIBLE_POSITIONS[1]]["e"]))
-
-
-        """
-        self.input_object.goto(6, a, speed=SERVO_SPEED, degrees=True)
-        time.sleep(0.5)
-        self.input_object.goto(7, b, speed=SERVO_SPEED, degrees=True)
-        time.sleep(0.5)
-        self.input_object.goto(8, c, speed=SERVO_SPEED, degrees=True)
-        time.sleep(0.5)
-        self.input_object.goto(9, d, speed=SERVO_SPEED, degrees=True)
-        time.sleep(2.0)
-        #e = 100
-        self.input_object.goto(10, e, speed=SERVO_SPEED, degrees=True)
-        time.sleep(0.5)
-        
-        print("A: {} B: {} C: {} D: {} E: {}".format(a,
-                                                     b,
-                                                     c,
-                                                     d,
-                                                    e))
-        """
+                                                     SERVO_SETTING[POSSIBLE_POSITIONS[1]]["e"])
 
 
         return
@@ -214,15 +182,6 @@ class ServoMovement:
                                                      SERVO_SETTING[POSSIBLE_POSITIONS[0]]["e"]))
 
 
-        """
-                 pub1.publish(float(SERVO_SETTING[POSSIBLE_POSITIONS[0]]["a"]))
-                 pub2.publish(float(SERVO_SETTING[POSSIBLE_POSITIONS[0]]["b"]))
-                 pub3.publish(float(SERVO_SETTING[POSSIBLE_POSITIONS[0]]["c"]))
-                 pub4.publish(float(SERVO_SETTING[POSSIBLE_POSITIONS[0]]["d"]))
-                 pub5.publish(float(SERVO_SETTING[POSSIBLE_POSITIONS[0]]["e"]))
-                 # delay between motions
-                 rospy.sleep(float(delay))
-        """
 
         self.input_object.goto(6, SERVO_SETTING[POSSIBLE_POSITIONS[0]]["a"], speed=SERVO_SPEED, degrees=True)
         time.sleep(0.5)
@@ -254,61 +213,13 @@ class ServoMovement:
         return
 
 
-def get_values():
-    #print("In get Values")
-    global a,b,c,d,e,flag
-    if(keyboard.is_pressed("q")):
-       a=a+25
-       flag = 1
-    elif (keyboard.is_pressed("a")):
-        a=a-25
-        flag = 1
-    elif (keyboard.is_pressed("w")):
-        b = b + 25
-        flag = 1
-    elif (keyboard.is_pressed("s")):
-        b = b - 25
-        flag = 1
-    elif (keyboard.is_pressed("e")):
-        c = c + 25
-        flag = 1
-    elif (keyboard.is_pressed("d")):
-        c = c - 25
-        flag = 1
-
-    elif (keyboard.is_pressed("r")):
-        d = d + 25
-        flag = 1
-    elif (keyboard.is_pressed("f")):
-        d = d - 25
-        flag = 1
-
-    elif (keyboard.is_pressed("t")):
-        e = e + 25
-        flag = 1
-    elif (keyboard.is_pressed("g")):
-        e = e - 25
-        flag = 1
-
-    elif(keyboard.is_pressed("m")):
-        servo_class.reset()
-
-
-
-    return
-
-
 def motion_play():
     servo_class.pick_up()
     servo_class.collect()
     servo_class.place()
     return
 
-def rospy():
-    rospy.init_node('Arm_movement', anonymous=True)
-    # rospy.Subscriber('/Pick_Item', String, motion_play)
-    # rate = rospy.Rate(20)
-    # rospy.spin()
+
 
 if __name__ == "__main__":
     # open COM port
@@ -320,20 +231,8 @@ if __name__ == "__main__":
     motion_play()
     servo_class.reset()
 
-    """
-    while(1):
-        get_values()
-        if(flag==1):
-            print("FLag Set")
-            flag=0
-            motion_play()
-   
 
-    try:
-        rospy()
-    except rospy.ROSInterruptException:
-        pass
-    """
+ 
 
 
  # Reset Position claw should be closed.
