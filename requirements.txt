@@ -3,3 +3,5 @@ opencv-contrib-python==4.0.0.21
 pyswip==0.2.8
 boto3==1.9.57
 playsound==1.2.2
+pyax12==0.5.dev3
+serial==0.0.70
